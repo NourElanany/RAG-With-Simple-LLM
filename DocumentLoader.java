@@ -126,6 +126,55 @@ public class DocumentLoader {
                 .trim();
     }
 
+    /**
+     * Split large paragraph by sentences
+     */
+    private static List<String> splitParagraphBySentences(String paragraph, int maxChunkSize, int overlap) {
+        List<String> chunks = new ArrayList<>();
+
+        // Split by sentences (Arabic and English)
+        String[] sentences = ARABIC_SENTENCE_END.split(paragraph);
+
+        if (sentences.length <= 1) {
+            // Fallback to word splitting if no sentences found
+            return splitByWords(paragraph, maxChunkSize, overlap);
+        }
+
+        StringBuilder currentChunk = new StringBuilder();
+
+        for (String sentence : sentences) {
+            sentence = sentence.trim();
+            if (sentence.isEmpty()) continue;
+
+            // If single sentence is too long, split it by words
+            if (sentence.length() > maxChunkSize) {
+                if (currentChunk.length() > 0) {
+                    chunks.add(currentChunk.toString().trim());
+                    currentChunk = new StringBuilder();
+                }
+                chunks.addAll(splitByWords(sentence, maxChunkSize, overlap));
+            }
+            // If adding sentence exceeds limit
+            else if (currentChunk.length() + sentence.length() > maxChunkSize) {
+                if (currentChunk.length() > 0) {
+                    chunks.add(currentChunk.toString().trim());
+                    currentChunk = new StringBuilder();
+                }
+                currentChunk.append(sentence).append(". ");
+            }
+            // Add sentence to current chunk
+            else {
+                currentChunk.append(sentence).append(". ");
+            }
+        }
+
+        if (currentChunk.length() > 0) {
+            chunks.add(currentChunk.toString().trim());
+        }
+
+        return chunks;
+    }
+
 
 
     public static void main(String[] args) {
