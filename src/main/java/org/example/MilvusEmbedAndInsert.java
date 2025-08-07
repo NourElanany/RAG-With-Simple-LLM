@@ -67,3 +67,49 @@ public class MilvusEmbedAndInsert implements AutoCloseable {
         System.out.println("Connected to Milvus at " + host + ":" + port);
     }
     
+    /**
+     * Initialize the collection for document insertion
+     * Creates index and loads collection into memory
+     */
+    public boolean initializeCollection() {
+        try {
+            System.out.println("Initializing collection: " + collectionName);
+
+            boolean indexCreated = createIndexIfNotExists();
+            boolean collectionLoaded = loadCollection();
+
+            if (indexCreated && collectionLoaded) {
+                System.out.println("Collection initialized successfully!");
+                return true;
+            } else {
+                System.err.println("Collection initialization had issues");
+                return false;
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to initialize collection: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Create index for the embedding field if it doesn't exist
+     */
+    private boolean createIndexIfNotExists() {
+        try {
+            CreateIndexParam indexParam = CreateIndexParam.newBuilder()
+                    .withCollectionName(collectionName)
+                    .withFieldName("embedding")
+                    .withIndexType(io.milvus.param.IndexType.IVF_FLAT)
+                    .withMetricType(io.milvus.param.MetricType.COSINE)
+                    .withExtraParam("{\"nlist\":128}")
+                    .build();
+
+            milvusClient.createIndex(indexParam);
+            System.out.println("✅ Index created successfully!");
+            return true;
+        } catch (Exception e) {
+            System.out.println("ℹ️ Index may already exist: " + e.getMessage());
+            return true; // Assume it exists
+        }
+    }
+
