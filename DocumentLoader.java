@@ -39,6 +39,76 @@ public class DocumentLoader {
         }
     }
 
+    /**
+     * Improved text splitting with better sentence awareness
+     */
+    public static List<String> splitText(String text, int maxChunkSize, int overlap) {
+        if (text == null || text.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // Clean the text first
+        text = cleanText(text);
+
+        List<String> chunks = new ArrayList<>();
+
+        // Try to split by paragraphs first
+        List<String> paragraphs = splitByParagraphs(text);
+
+        StringBuilder currentChunk = new StringBuilder();
+
+        for (String paragraph : paragraphs) {
+            // If paragraph alone is too big, split it further
+            if (paragraph.length() > maxChunkSize) {
+                // Save current chunk if not empty
+                if (currentChunk.length() > 0) {
+                    chunks.add(currentChunk.toString().trim());
+                    currentChunk = new StringBuilder();
+                }
+
+                // Split large paragraph by sentences
+                chunks.addAll(splitParagraphBySentences(paragraph, maxChunkSize, overlap));
+            }
+            // If adding this paragraph exceeds limit
+            else if (currentChunk.length() + paragraph.length() > maxChunkSize) {
+                // Save current chunk
+                if (currentChunk.length() > 0) {
+                    chunks.add(currentChunk.toString().trim());
+                }
+
+                // Start new chunk with overlap if needed
+                currentChunk = new StringBuilder();
+                if (overlap > 0 && chunks.size() > 0) {
+                    String lastChunk = chunks.get(chunks.size() - 1);
+                    if (lastChunk.length() > overlap) {
+                        currentChunk.append(lastChunk.substring(lastChunk.length() - overlap));
+                        currentChunk.append(" ");
+                    }
+                }
+                currentChunk.append(paragraph);
+            }
+            // Add paragraph to current chunk
+            else {
+                if (currentChunk.length() > 0) {
+                    currentChunk.append("\n\n");
+                }
+                currentChunk.append(paragraph);
+            }
+        }
+
+        // Add final chunk if not empty
+        if (currentChunk.length() > 0) {
+            chunks.add(currentChunk.toString().trim());
+        }
+
+        // Filter out very short chunks
+        chunks.removeIf(chunk -> chunk.trim().length() < 10);
+
+        System.out.println("✅ Split text into " + chunks.size() + " chunks");
+        return chunks;
+    }
+
+
 
     public static void main(String[] args) {
         System.out.println("🧪 Testing DocumentLoader improvements...\n");
