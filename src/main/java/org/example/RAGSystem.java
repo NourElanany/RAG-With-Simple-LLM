@@ -5,12 +5,6 @@ import java.util.Scanner;
 
 /**
  * Complete RAG System - Combines Retrieval and Generation
- *
- * This class orchestrates the full RAG pipeline:
- * 1. Takes user query
- * 2. Retrieves relevant documents from vector database
- * 3. Generates response using LLM with retrieved context
- *FinalTest
  */
 public class RAGSystem implements AutoCloseable {
 
@@ -20,44 +14,41 @@ public class RAGSystem implements AutoCloseable {
     public RAGSystem() {
         this.retriever = new Retriever();
         this.generator = new Generator();
-
-        System.out.println("🚀 RAG System initialized successfully!");
+        log("🚀 RAG System initialized successfully!");
     }
 
     public RAGSystem(String ollamaUrl, String model) {
         this.retriever = new Retriever();
         this.generator = new Generator(ollamaUrl, model);
-
-        System.out.println("🚀 RAG System initialized with custom settings!");
+        log("🚀 RAG System initialized with custom settings!");
     }
 
-    /**
-     * Main RAG method - the complete pipeline
-     * @param query User question
-     * @return Generated response with context
-     */
     public RAGResponse ask(String query) {
-        System.out.println("🔍 Searching for relevant information...");
+        log("🔍 Searching for relevant information...");
 
-        // Step 1: Retrieve relevant documents
-        List<String> retrievedDocs = retriever.search(query);
+        List<String> retrievedDocs;
+        try {
+            retrievedDocs = retriever.search(query);
+        } catch (Exception e) {
+            throw new RuntimeException("Error during document retrieval: " + e.getMessage());
+        }
 
-        System.out.println("📋 Found " + retrievedDocs.size() + " relevant documents");
+        log("📋 Found " + retrievedDocs.size() + " relevant documents");
 
-        // Step 2: Generate response with context
-        System.out.println("🧠 Generating response...");
-        String response = generator.generateWithContext(query, retrievedDocs);
+        String response;
+        try {
+            log("🧠 Generating response...");
+            response = generator.generateWithContext(query, retrievedDocs);
+        } catch (Exception e) {
+            throw new RuntimeException("Error during response generation: " + e.getMessage());
+        }
 
         return new RAGResponse(query, retrievedDocs, response);
     }
 
-    /**
-     * Interactive chat mode
-     */
     public void startChatMode() {
         Scanner scanner = new Scanner(System.in);
-
-        System.out.println("💬 RAG Chat Mode Started!");
+        log("💬 RAG Chat Mode Started!");
         System.out.println("Type 'exit' to quit, 'clear' to see available commands\n");
 
         while (true) {
@@ -65,7 +56,7 @@ public class RAGSystem implements AutoCloseable {
             String input = scanner.nextLine().trim();
 
             if (input.equalsIgnoreCase("exit")) {
-                System.out.println("👋 Goodbye!");
+                log("👋 Goodbye!");
                 break;
             }
 
@@ -79,9 +70,7 @@ public class RAGSystem implements AutoCloseable {
                 continue;
             }
 
-            if (input.isEmpty()) {
-                continue;
-            }
+            if (input.isEmpty()) continue;
 
             try {
                 RAGResponse response = ask(input);
@@ -98,8 +87,12 @@ public class RAGSystem implements AutoCloseable {
 
     @Override
     public void close() {
-        System.out.println("🔒 Closing RAG System...");
-        // Close any resources if needed
+        log("🔒 Closing RAG System...");
+        // Close resources if needed
+    }
+
+    private void log(String message) {
+        System.out.println("[RAG] " + message);
     }
 
     /**
@@ -123,35 +116,29 @@ public class RAGSystem implements AutoCloseable {
             System.out.println("📝 Question: " + query);
             System.out.println("━".repeat(60));
 
-            System.out.println("🔎 Retrieved Context (" + retrievedDocs.size() + " documents):");
+            System.out.println("🔎 Retrieved Context (" + retrievedDocs.size() + "):");
             for (int i = 0; i < retrievedDocs.size(); i++) {
                 String doc = retrievedDocs.get(i);
-                String preview = doc.length() > 100 ? doc.substring(0, 100) + "..." : doc;
+                String preview = doc.replaceAll("\\s+", " ").trim();
+                preview = preview.length() > 120 ? preview.substring(0, 120) + "..." : preview;
                 System.out.println("   " + (i + 1) + ". " + preview);
             }
 
             System.out.println("━".repeat(60));
-            System.out.println("🤖 Response:");
-            System.out.println(response);
+            System.out.println("🤖 Response:\n" + response);
             System.out.println("━".repeat(60));
         }
 
-        // Getters
         public String getQuery() { return query; }
         public List<String> getRetrievedDocs() { return retrievedDocs; }
         public String getResponse() { return response; }
         public long getTimestamp() { return timestamp; }
     }
 
-    /**
-     * Main method - can run in different modes
-     */
     public static void main(String[] args) {
-
         try (RAGSystem rag = new RAGSystem()) {
 
             if (args.length > 0) {
-                // Command line mode - single question
                 String question = String.join(" ", args);
                 System.out.println("🚀 RAG System - Single Query Mode\n");
 
@@ -159,7 +146,6 @@ public class RAGSystem implements AutoCloseable {
                 response.printFormatted();
 
             } else {
-                // Interactive chat mode
                 rag.startChatMode();
             }
 
