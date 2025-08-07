@@ -47,7 +47,12 @@ public class MilvusCreateCollection {
                     .withAutoID(true)
                     .build();
 
-
+            //Define embeddingField
+            FieldType embeddingField = FieldType.newBuilder()
+                    .withName("embedding")
+                    .withDataType(DataType.FloatVector)
+                    .withDimension(dimension)
+                    .build();
 
             // ✅ 3. Create collection
             CreateCollectionParam createCollectionParam = CreateCollectionParam.newBuilder()
