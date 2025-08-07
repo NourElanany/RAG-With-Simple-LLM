@@ -10,6 +10,7 @@ import java.util.Scanner;
  * 1. Takes user query
  * 2. Retrieves relevant documents from vector database
  * 3. Generates response using LLM with retrieved context
+ *FinalTest
  */
 public class RAGSystem implements AutoCloseable {
 
