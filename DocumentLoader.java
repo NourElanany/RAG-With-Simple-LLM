@@ -108,6 +108,24 @@ public class DocumentLoader {
         return chunks;
     }
 
+    /**
+     * Clean text from unwanted characters and normalize
+     */
+    private static String cleanText(String text) {
+        if (text == null) return "";
+
+        return text
+                // Remove excessive whitespace
+                .replaceAll("\\s{3,}", "\n\n")
+                // Normalize line breaks
+                .replaceAll("\\r\\n|\\r", "\n")
+                // Remove excessive line breaks
+                .replaceAll("\\n{4,}", "\n\n\n")
+                // Clean up spaces
+                .replaceAll(" {2,}", " ")
+                .trim();
+    }
+
 
 
     public static void main(String[] args) {
