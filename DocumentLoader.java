@@ -175,6 +175,40 @@ public class DocumentLoader {
         return chunks;
     }
 
+    /**
+     * Fallback: split by words when sentences are too long
+     */
+    private static List<String> splitByWords(String text, int maxChunkSize, int overlap) {
+        List<String> chunks = new ArrayList<>();
+        String[] words = text.split("\\s+");
+
+        StringBuilder currentChunk = new StringBuilder();
+
+        for (String word : words) {
+            if (currentChunk.length() + word.length() + 1 > maxChunkSize) {
+                if (currentChunk.length() > 0) {
+                    chunks.add(currentChunk.toString().trim());
+                    currentChunk = new StringBuilder();
+
+                    // Add overlap
+                    if (overlap > 0) {
+                        String[] prevWords = chunks.get(chunks.size() - 1).split("\\s+");
+                        int overlapWords = Math.min(overlap / 10, prevWords.length); // Rough estimate
+                        for (int i = Math.max(0, prevWords.length - overlapWords); i < prevWords.length; i++) {
+                            currentChunk.append(prevWords[i]).append(" ");
+                        }
+                    }
+                }
+            }
+            currentChunk.append(word).append(" ");
+        }
+
+        if (currentChunk.length() > 0) {
+            chunks.add(currentChunk.toString().trim());
+        }
+
+        return chunks;
+    }
 
 
     public static void main(String[] args) {
