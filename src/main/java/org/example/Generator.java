@@ -110,12 +110,12 @@ public class Generator {
                 ObjectNode responseJson = (ObjectNode) objectMapper.readTree(response.body());
                 return responseJson.get("response").asText();
             } else {
-                return "خطأ في الاتصال مع نموذج اللغة: " + response.statusCode();
+                return "خطأ في الاتصال مع نموذج اللغة : " + response.statusCode();
             }
 
         } catch (IOException | InterruptedException e) {
-            System.err.println("Error calling Ollama: " + e.getMessage());
-            return "عذراً، حدث خطأ أثناء إنتاج الإجابة: " + e.getMessage();
+            System.err.println("Error calling Ollama : " + e.getMessage());
+            return "عذراً، حدث خطأ أثناءإنتاج الإجابة : " + e.getMessage();
         }
     }
 
@@ -127,7 +127,7 @@ public class Generator {
 
         // Test direct generation
         String directResponse = generator.generateDirectResponse("ما هو الذكاء الاصطناعي؟");
-        System.out.println("Direct Response: " + directResponse);
+        System.out.println("Direct Response : " + directResponse);
 
         // Test RAG generation
         List<String> context = List.of(
