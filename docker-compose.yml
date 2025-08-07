@@ -1,0 +1,64 @@
+version: '3.5'
+
+services:
+  milvus-standalone:
+    container_name: milvus-standalone
+    image: milvusdb/milvus:v2.4.0
+    restart: always
+    ports:
+      - "19530:19530"  # Milvus gRPC port
+      - "9091:9091"    # Milvus HTTP port
+    volumes:
+      - milvus_data:/var/lib/milvus
+    environment:
+      TZ: "UTC"
+      ETCD_ENDPOINTS: "etcd:2379"
+      MINIO_ADDRESS: "minio:9000"
+      MINIO_ACCESS_KEY: "minioadmin"
+      MINIO_SECRET_KEY: "minioadmin"
+      MILVUS_DEPLOY_MODE: "standalone"
+    command: [ "milvus", "run", "standalone" ]
+    depends_on:
+      - etcd
+      - minio
+
+
+  etcd:
+    container_name: milvus-etcd
+    image: quay.io/coreos/etcd:v3.5.5
+    restart: always
+    environment:
+      - ETCD_AUTO_COMPACTION_RETENTION=1
+      - ETCD_QUOTA_BACKEND_BYTES=4294967296
+      - ETCD_SNAPSHOT_COUNT=50000
+      - ETCD_HEARTBEAT_INTERVAL=500
+      - ETCD_ELECTION_TIMEOUT=5000
+      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+      - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://etcd:2380
+      - ETCD_INITIAL_CLUSTER=etcd=http://etcd:2380
+      - ETCD_INITIAL_CLUSTER_STATE=new
+      - ETCD_INITIAL_CLUSTER_TOKEN=etcd-cluster
+      - ETCD_NAME=etcd
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+
+  minio:
+    container_name: milvus-minio
+    image: minio/minio:RELEASE.2023-10-16T04-13-43Z
+    restart: always
+    volumes:
+      - minio_data:/data
+    environment:
+      MINIO_ACCESS_KEY: "minioadmin"
+      MINIO_SECRET_KEY: "minioadmin"
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+volumes:
+  milvus_data:
+  minio_data:
