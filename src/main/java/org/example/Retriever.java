@@ -10,8 +10,9 @@ import java.util.*;
 
 /**
  * Retriever class that connects to a Milvus vector database and retrieves top-k
- * semantically similar text entries based on a user query.
+ * semantically similar text entries based on a user query...
  */
+
 public class Retriever {
 
     private final MilvusServiceClient milvusClient;
