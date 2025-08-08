@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/RAG-With-Simple-LLM.iml" filepath="$PROJECT_DIR$/.idea/RAG-With-Simple-LLM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/langchain4j-ollama-demo.iml" filepath="$PROJECT_DIR$/langchain4j-ollama-demo.iml" />
     </modules>
   </component>
 </project>

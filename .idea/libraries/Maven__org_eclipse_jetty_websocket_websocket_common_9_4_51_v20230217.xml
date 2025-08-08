@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: org.eclipse.jetty.websocket:websocket-common:9.4.51.v20230217" type="java-imported" external-system-id="Maven">
+    <properties groupId="org.eclipse.jetty.websocket" artifactId="websocket-common" version="9.4.51.v20230217" baseVersion="9.4.51.v20230217" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/websocket/websocket-common/9.4.51.v20230217/websocket-common-9.4.51.v20230217.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/websocket/websocket-common/9.4.51.v20230217/websocket-common-9.4.51.v20230217-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/websocket/websocket-common/9.4.51.v20230217/websocket-common-9.4.51.v20230217-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

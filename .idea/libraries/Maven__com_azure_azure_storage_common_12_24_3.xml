@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: com.azure:azure-storage-common:12.24.3" type="java-imported" external-system-id="Maven">
+    <properties groupId="com.azure" artifactId="azure-storage-common" version="12.24.3" baseVersion="12.24.3" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/azure/azure-storage-common/12.24.3/azure-storage-common-12.24.3.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/azure/azure-storage-common/12.24.3/azure-storage-common-12.24.3-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/azure/azure-storage-common/12.24.3/azure-storage-common-12.24.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

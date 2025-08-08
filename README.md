@@ -1,12 +1,20 @@
 # RAG System with LangChain4j, Milvus, and Ollama
 
-نظام RAG (Retrieval-Augmented Generation) متكامل باستخدام Java JDK17، LangChain4j، Milvus، و Ollama المحلي.
+A comprehensive Retrieval-Augmented Generation (RAG) system built with Java JDK17, LangChain4j, Milvus, and local Ollama LLM. This project demonstrates how to build a production-ready RAG pipeline for question-answering and information retrieval applications.
 
-## 🏗️ Architecture
+## 🏗️ System Architecture
+
+The system follows a streamlined pipeline for processing user queries and generating contextual responses:
 
 ```
-User Query → Embedder (Ollama) → Milvus Search → Context Retrieval → LLM (Llama3.2) → Response
+User Query → Embedder (Ollama) → Milvus Vector Search → Context Retrieval → LLM (Llama3.2) → Response Generation
 ```
+
+### Key Components:
+- **Ollama**: Local LLM for generating embeddings and text generation
+- **Milvus**: High-performance vector database for efficient similarity search
+- **LangChain4j**: Java implementation of LangChain for building LLM applications
+- **Llama3.2**: Open-weight LLM for response generation
 
 ## 📁 Project Structure
 
@@ -26,78 +34,135 @@ setup.md                       # دليل الإعداد التفصيلي
 
 ## 🚀 Quick Start
 
-### 1. تشغيل خدمات Milvus
+### Prerequisites
+- Java JDK 17 or higher
+- Docker and Docker Compose
+- Ollama installed locally
+- Maven 3.6+
+
+### 1. Start Milvus Services
 ```bash
 docker-compose up -d
 ```
 
-### 2. التأكد من Ollama المحلي
+### 2. Verify Local Ollama Installation
 ```bash
 ollama list
-# تأكد من وجود llama3.2 و nomic-embed-text
+# Ensure you have the following models:
+# - llama3.2
+# - nomic-embed-text
 ```
 
-### 3. تشغيل الاختبار السريع
+### 3. Run Quick Test
 ```bash
-# على Windows
+# On Windows
 run-rag.bat
 
-# أو باستخدام Maven مباشرة
+# Or using Maven directly
 mvn exec:java -Dexec.mainClass="org.example.QuickTest"
 ```
 
-### 4. تشغيل النظام التفاعلي
+### 4. Start Interactive RAG System
 ```bash
 mvn exec:java -Dexec.mainClass="org.example.RAGSystem"
 ```
 
-## 🔧 Components
+## 🔧 Core Components
 
-### MilvusCreateCollection
-ينشئ مجموعة في Milvus بالحقول التالية:
-- `id`: معرف فريد (Int64, auto-generated)
-- `embedding`: vector التضمين (FloatVector, 384 dimensions)
-- `text`: النص الأصلي (VarChar, max 512 chars)
+### 1. MilvusCreateCollection
+Creates and configures a Milvus collection with the following schema:
+- `id`: Unique identifier (Int64, auto-generated)
+- `embedding`: Embedding vector (FloatVector, 384 dimensions)
+- `text`: Original text content (VarChar, max 512 characters)
 
-### Embedder
-يستخدم Ollama مع نموذج `nomic-embed-text` لتحويل النصوص إلى vectors.
+### 2. Embedder
+Handles text-to-vector conversion using Ollama with the `nomic-embed-text` model. This component is responsible for generating dense vector representations of text documents and queries.
 
-### MilvusEmbedAndInsert
-يدرج مستندات عينة في قاعدة البيانات مع embeddings الخاصة بها.
+### 3. MilvusEmbedAndInsert
+Manages the process of ingesting documents into the system by:
+- Processing raw text documents
+- Generating embeddings
+- Storing them in the Milvus vector database
 
-### MilvusSearch
-يبحث عن المستندات المشابهة باستخدام cosine similarity.
+### 4. MilvusSearch
+Implements efficient vector similarity search with the following features:
+- Cosine similarity-based retrieval
+- Configurable top-k results
+- Filtering capabilities
 
-### RAGSystem
-النظام الكامل الذي:
-1. يأخذ استعلام المستخدم
-2. يبحث عن مستندات مشابهة
-3. يستخدم السياق مع Llama3.2 لتوليد الإجابة
+### 5. RAGSystem
+The main orchestrator that combines all components to provide a complete RAG pipeline:
+1. Processes user queries
+2. Retrieves relevant context using vector similarity search
+3. Generates accurate and context-aware responses using Llama3.2
+4. Handles conversation history and context management
 
 ## 💡 Usage Examples
 
-### البحث المباشر
+### 1. Direct Vector Search
 ```java
+// Initialize the search component
 MilvusSearch searcher = new MilvusSearch();
+
+// Search for similar documents
 List<SearchResult> results = searcher.searchSimilarDocuments("What is LangChain4j?", 3);
+
+// Process and display results
+results.forEach(result -> System.out.println("Similarity: " + result.getScore() 
+    + "\nText: " + result.getText() + "\n"));
 ```
 
-### نظام RAG الكامل
+### 2. Complete RAG Pipeline
 ```java
+// Initialize the RAG system
 RAGSystem ragSystem = new RAGSystem();
-String response = ragSystem.generateRAGResponse("Explain vector databases", 3);
+
+// Generate a response with context
+String response = ragSystem.generateRAGResponse(
+    "Explain vector databases",  // User query
+    3,                           // Number of context documents
+    0.7,                         // Similarity threshold
+    1024                         // Max tokens in response
+);
+
+System.out.println("Generated Response: " + response);
 ```
 
-### الوضع التفاعلي
+### 3. Interactive Mode
 ```bash
+# Start the interactive RAG console
 mvn exec:java -Dexec.mainClass="org.example.RAGSystem"
-# ثم اكتب أسئلتك
+
+# Example interaction:
+# > What is the capital of France?
+# < The capital of France is Paris.
+# > How does vector search work?
+# < Vector search works by...
 ```
 
 ## 🛠️ Configuration
 
+### Environment Variables
+Create a `.env` file in the project root with the following variables:
+```
+MILVUS_HOST=127.0.0.1
+MILVUS_PORT=19530
+OLLAMA_BASE_URL=http://localhost:11434
+EMBEDDING_MODEL=nomic-embed-text
+LLM_MODEL=llama3.2
+```
+
 ### Milvus Connection
 - Host: `127.0.0.1`
+- Port: `19530`
+- Collection Name: `rag_documents`
+- Vector Dimension: `384`
+
+### Performance Tuning
+- Batch size for embeddings: `8`
+- Max tokens in response: `1024`
+- Similarity threshold: `0.7`
+- Top-k results: `3`
 - Port: `19530`
 
 ### Ollama Connection

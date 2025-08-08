@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: com.microsoft.azure:msal4j:1.13.9" type="java-imported" external-system-id="Maven">
+    <properties groupId="com.microsoft.azure" artifactId="msal4j" version="1.13.9" baseVersion="1.13.9" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/microsoft/azure/msal4j/1.13.9/msal4j-1.13.9.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/microsoft/azure/msal4j/1.13.9/msal4j-1.13.9-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/microsoft/azure/msal4j/1.13.9/msal4j-1.13.9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

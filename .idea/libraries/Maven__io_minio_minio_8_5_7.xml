@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: io.minio:minio:8.5.7" type="java-imported" external-system-id="Maven">
+    <properties groupId="io.minio" artifactId="minio" version="8.5.7" baseVersion="8.5.7" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/io/minio/minio/8.5.7/minio-8.5.7.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/io/minio/minio/8.5.7/minio-8.5.7-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/io/minio/minio/8.5.7/minio-8.5.7-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
