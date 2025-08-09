@@ -11,7 +11,7 @@ import java.util.Scanner;
  * 2. Retrieves relevant documents from vector database
  * 3. Generates response using LLM with retrieved context
 <<<<<<< HEAD
- *FinalTest
+ *Final
 =======
 >>>>>>> c9cba5e (Merged main into MohamedRamadan)
  */
@@ -166,9 +166,6 @@ public class RAGSystem implements AutoCloseable {
                 rag.startChatMode();
             }
 
-        } catch (Exception e) {
-            System.err.println("❌ Fatal error: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 }
