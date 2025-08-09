@@ -11,7 +11,7 @@ import java.util.Scanner;
  * 2. Retrieves relevant documents from vector database
  * 3. Generates response using LLM with retrieved context
 <<<<<<< HEAD
- *FinalTest
+ *Final and true work with Retriever and Generator
 =======
 >>>>>>> c9cba5e (Merged main into MohamedRamadan)
  */
