@@ -135,7 +135,7 @@ public class Generator {
                 "Vector embeddings represent text as numerical vectors in high-dimensional space for semantic search."
         );
 
-        String ragResponse = generator.generateWithContext("ما هو LangChain4j؟", context);
+        String ragResponse = generator.generateWithContext(" ما هو LangChain4j ؟ ", context);
         System.out.println("\nRAG Response: " + ragResponse);
     }
 }
