@@ -166,6 +166,9 @@ public class RAGSystem implements AutoCloseable {
                 rag.startChatMode();
             }
 
+        } catch (Exception e) {
+            System.err.println("❌ Fatal error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
