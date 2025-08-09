@@ -40,6 +40,12 @@ public class RAGSystem implements AutoCloseable {
      * @return Generated response with context
      */
     public RAGResponse ask(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            System.out.println("⚠️ Query is empty. Please enter a valid question.");
+            return new RAGResponse(query, List.of(),
+                    "الاستعلام فارغ، من فضلك أدخل سؤالًا صالحًا.");
+        }
+
         System.out.println("🔍 Starting search for relevant information...");
 
         long startTime = System.currentTimeMillis();
