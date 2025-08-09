@@ -115,7 +115,7 @@ public class Generator {
 
         } catch (IOException | InterruptedException e) {
             System.err.println("Error calling Ollama : " + e.getMessage());
-            return "عذراً، حدث خطأ أثناءإنتاج الإجابة : " + e.getMessage();
+            return "عذراً ، حدث خطأ أثناءإنتاج الإجابة : " + e.getMessage();
         }
     }
 
