@@ -109,20 +109,28 @@ public class Generator {
                     .build();
 
             // Send request
-            HttpResponse<String> response = httpClient.send(request,
-                    HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() == 200) {
-                // Parse response
-                ObjectNode responseJson = (ObjectNode) objectMapper.readTree(response.body());
-                return responseJson.get("response").asText();
+            // Handle HTTP status
+            if (response.statusCode() != 200) {
+                return "خطأ في الاتصال مع نموذج اللغة (HTTP " + response.statusCode() + ")";
+            }
+
+            // Parse response JSON safely
+            ObjectNode responseJson = (ObjectNode) objectMapper.readTree(response.body());
+
+            if (responseJson.hasNonNull("response")) {
+                return responseJson.get("response").asText().trim();
+            } else if (responseJson.hasNonNull("error")) {
+                return "خطأ من نموذج اللغة: " + responseJson.get("error").asText();
             } else {
-                return "خطأ في الاتصال مع نموذج اللغة : " + response.statusCode();
+                return "لم يتم استلام إجابة من نموذج اللغة.";
             }
 
         } catch (IOException | InterruptedException e) {
-            System.err.println("Error calling Ollama : " + e.getMessage());
-            return "عذراً ، حدث خطأ أثناءإنتاج الإجابة : " + e.getMessage();
+            Thread.currentThread().interrupt(); // Restore interrupt status if needed
+            System.err.println("Error calling Ollama: " + e.getMessage());
+            return "عذراً، حدث خطأ أثناء إنتاج الإجابة: " + e.getMessage();
         }
     }
 
