@@ -64,23 +64,29 @@ public class Generator {
      * Build RAG prompt template
      */
     private String buildRAGPrompt(String query, String context) {
+        // Limit context length to avoid exceeding model token limits
+        int maxContextLength = 2000; // you can adjust based on your model's token limit
+        if (context.length() > maxContextLength) {
+            context = context.substring(0, maxContextLength) + "... [context truncated]";
+        }
+
         return String.format("""
-            You are a helpful Arabic assistant that answers questions based on provided information.
-            
-            CONTEXT (Available Information):
-            %s
-            
-            QUESTION: %s
-            
-            INSTRUCTIONS:
-            - Answer ONLY based on the provided context above
-            - If the answer is not found in the context, clearly state: "لا توجد معلومات كافية في السياق المتوفر للإجابة على هذا السؤال"
-            - Be accurate and helpful
-            - Respond in Arabic only
-            - Use the exact information from the context, don't make up details
-            
-            ANSWER IN ARABIC:
-            """, context, query);
+        You are a smart assistant that answers questions in Arabic only, based strictly on the information provided below.
+
+        📄 CONTEXT:
+        %s
+
+        ❓ QUESTION:
+        %s
+
+        📝 INSTRUCTIONS:
+        - Answer ONLY using the information in the context above.
+        - If the answer cannot be found in the context, clearly write: "لا توجد معلومات كافية في السياق للإجابة على هذا السؤال".
+        - Do NOT add information from outside the context or guess.
+        - Make your answer clear and concise.
+
+        ✏️ ANSWER IN ARABIC:
+        """, context, query);
     }
 
     /**
