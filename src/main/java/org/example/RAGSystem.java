@@ -40,16 +40,28 @@ public class RAGSystem implements AutoCloseable {
      * @return Generated response with context
      */
     public RAGResponse ask(String query) {
-        System.out.println("🔍 Searching for relevant information...");
+        System.out.println("🔍 Starting search for relevant information...");
+
+        long startTime = System.currentTimeMillis();
 
         // Step 1: Retrieve relevant documents
         List<String> retrievedDocs = retriever.search(query);
+        long retrievalTime = System.currentTimeMillis();
+        System.out.println("📋 Found " + retrievedDocs.size() + " relevant documents in "
+                + (retrievalTime - startTime) + " ms");
 
-        System.out.println("📋 Found " + retrievedDocs.size() + " relevant documents");
+        if (retrievedDocs.isEmpty()) {
+            System.out.println("⚠️ No relevant documents found. Skipping generation.");
+            return new RAGResponse(query, retrievedDocs,
+                    "لا توجد معلومات كافية في السياق للإجابة على هذا السؤال");
+        }
 
         // Step 2: Generate response with context
         System.out.println("🧠 Generating response...");
         String response = generator.generateWithContext(query, retrievedDocs);
+        long generationTime = System.currentTimeMillis();
+        System.out.println("✅ Response generated in "
+                + (generationTime - retrievalTime) + " ms");
 
         return new RAGResponse(query, retrievedDocs, response);
     }
