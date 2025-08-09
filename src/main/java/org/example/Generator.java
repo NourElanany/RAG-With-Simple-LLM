@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * Generator class for RAG - integrates with Ollama to generate responses
  * based on retrieved context and user query
+ * last update
  */
 public class Generator {
 
