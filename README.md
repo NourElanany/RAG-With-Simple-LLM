@@ -172,7 +172,7 @@ LLM_MODEL=llama3.2
 
 ## 📊 Sample Data
 
-النظام يأتي مع مستندات عينة حول:
+The system comes with sample documents about:
 - LangChain4j framework
 - Milvus vector database
 - Ollama local models
@@ -182,22 +182,24 @@ LLM_MODEL=llama3.2
 ## 🔍 Testing
 
 ```bash
-# اختبار كامل
+# Complete test
 mvn exec:java -Dexec.mainClass="org.example.QuickTest"
 
-# اختبار مكون واحد
+# Single component test
 mvn exec:java -Dexec.mainClass="org.example.Embedder"
 mvn exec:java -Dexec.mainClass="org.example.MilvusSearch"
 ```
 
 ## 🚨 Troubleshooting
 
-### مشاكل شائعة:
+### Common problems
+:
 1. **Connection refused**: تأكد من تشغيل Docker services
 2. **Model not found**: تأكد من تثبيت نماذج Ollama
 3. **Memory issues**: زيادة ذاكرة Docker
 
-### التحقق من الخدمات:
+### Verify services
+:
 ```bash
 # Docker services
 docker ps
@@ -209,14 +211,24 @@ ollama list
 mvn exec:java -Dexec.mainClass="org.example.MilvusPingTest"
 ```
 
+## 📸 Project Run Screenshots
+
+The following images show the output when running the project:
+
+### 🖼 Screenshot (test 1)
+![Screenshot of project run - step 1](test1.jpeg)
+
+### 🖼 Screenshot (test 2)
+![Screenshot of project run - step 2](test2.jpeg)
+
 ## 🎯 Next Steps
 
-- إضافة تحميل المستندات من ملفات
-- تقسيم المستندات الكبيرة
-- واجهة ويب
-- ذاكرة المحادثة
-- دعم أنواع ملفات متعددة
+- Added document uploading from files
+- Splitting large documents
+- Web interface
+- Chat memory
+- Support for multiple file types
 
 ## 📝 License
 
-هذا المشروع مفتوح المصدر ويمكن استخدامه بحرية.
+This project is open source and can be used freely.
